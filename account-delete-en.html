@@ -20,10 +20,10 @@
 <header><a class="logo" href="./">Pebble Play</a><nav><a href="privacy-en.html">Privacy Policy</a><a href="terms-en.html">Terms of Service</a><a href="account-delete-ko.html" hreflang="ko" lang="ko">한국어</a></nav></header>
 
 <h1>Delete your account and data</h1>
-<p class="meta">Apps: <b>PC Café: Seats to Stars</b> and <b>Enhance Tower</b> (Android) &middot; Developer: <b>Pebble Play</b> &middot; The game does not ask for your name or email, so your account is an anonymous user ID created by Firebase Authentication on your device.</p>
+<p class="meta">Apps: <b>PC Café: Seats to Stars</b> and <b>Enhance Tower</b> (Android) &middot; Developer: <b>Pebble Play</b> &middot; Firebase Authentication creates an anonymous ID and keeps your linked Google account ID and email if you link it.</p>
 
 <h2>Option 1. In the app (fastest)</h2>
-<p>Open the game &rsaquo; Settings &rsaquo; <b>Delete my data</b> &rsaquo; confirm. Deletion is scheduled for <b>15 days</b> later. During these 15 days your rankings and guild/alliance membership are hidden, and you can cancel by opening the game on the same device and choosing &ldquo;Cancel deletion&rdquo;.</p>
+<p>Open the game &rsaquo; Settings &rsaquo; <b>Delete my data</b> &rsaquo; confirm. Deletion is scheduled for <b>15 days</b> later. In PC Café, your rankings, duel listings and café previews are hidden, and you leave your alliance. Sign back into the same account to cancel deletion.</p>
 
 <h2>Option 2. On this page (without the app)</h2>
 <p>If you have uninstalled the game or changed phones, you can still request deletion here with the <b>deletion code</b> that the game shows in Settings &rsaquo; Delete my data &rsaquo; <b>Show deletion code</b> (format <code>PP-XXXX-XXXX-XXXX</code>). The code is specific to one game and one account. Getting a new code makes the old one invalid. The code is valid for 24 hours and works once.</p>
@@ -41,7 +41,7 @@
 
 <h2>What happens</h2>
 <table>
-<tr><th>Deleted</th><td>Nickname, scores and rankings, arena/duel team records, in-game mail, guild or alliance data, shop data, your anonymous user ID (the Firebase Authentication account, together with any linked Google account identifier), and your deletion code. Deletion happens 15 days after the request (see Option 1 for the cancel window). If you play both games with the same account, the sign-in account itself is removed when the last game&rsquo;s data is deleted.</td></tr>
+<tr><th>Deleted</th><td>Nickname, scores and rankings, arena/duel team records, in-game mail, guild or alliance data, shop data, your anonymous user ID (the Firebase Authentication account, together with any linked Google account identifier), and your deletion code. PC Café removes data in its daily cleanup after 15 days (see Option 1). If you play both games with the same account, the sign-in account itself is removed when the last game&rsquo;s data is deleted.</td></tr>
 <tr><th>Kept</th><td>Purchase and payment records (hashed purchase token, product, status), for as long as refund, fraud-prevention and legal retention duties require (for example, up to 5 years under Korean e-commerce law). They are not linked to a name or email. Short-lived rate-limit counters and standard Google Cloud server logs, which follow Google&rsquo;s retention settings.</td></tr>
 <tr><th>Not affected</th><td>Data held by Google (Google Play purchase history, AdMob advertising data). Manage it in your Google account.</td></tr>
 </table>
@@ -54,7 +54,7 @@
   // 서버 함수 주소(배포 뒤 확인): 2세대 HTTPS 함수 webAccountDelete, 서울 리전
   var ENDPOINT = 'https://asia-northeast3-pebbleplay-games.cloudfunctions.net/webAccountDelete';
   var T = {
-    ok: function (d) { return 'Your deletion request has been received. Your data will be deleted on ' + d + '. To cancel, open the game on the same device before then and choose “Cancel deletion”.'; },
+    ok: function (d) { return 'Your deletion request has been received. Your data will be deleted on ' + d + '. For PC Café, sign into the same account before then and cancel in the game.'; },
     already: function (d) { return 'A deletion request was already received for this account. Deletion is scheduled for ' + d + '.'; },
     code: 'This code was not recognized. Check the code, or get a new one in the game (old codes stop working when a new one is created), or use Option 3.',
     game: 'Choose a game.', rate: 'Too many attempts. Please try again in a few minutes.', paused: 'The service is temporarily paused. Please try again later or use Option 3.',
