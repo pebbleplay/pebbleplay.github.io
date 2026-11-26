@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delete your account · PC Café Tycoon · Enhance Tower · Pebble Play</title>
+<link rel="stylesheet" href="style.css">
+<style>
+ /* style.css 가 없을 때를 위한 최소 스타일(같은 폴더의 다른 페이지와 같은 틀) */
+ body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6;color:#222;background:#fff;margin:0}
+ main{max-width:720px;margin:0 auto;padding:16px}
+ header nav a{margin-right:12px} h1{font-size:1.5rem} h2{font-size:1.15rem;margin-top:1.6em}
+ label{display:block;margin:.8em 0 .2em;font-weight:600} select,input,button{font:inherit;padding:.5em .6em;max-width:100%}
+ input{width:16em;text-transform:uppercase} button{margin-top:1em;cursor:pointer}
+ #msg{margin-top:1em;padding:.7em .9em;border-radius:6px;display:none} #msg.ok{display:block;background:#e8f5e9} #msg.err{display:block;background:#fdecea}
+ table{border-collapse:collapse} th,td{border:1px solid #ccc;padding:.4em .6em;text-align:left;vertical-align:top}
+ footer{margin-top:2em;font-size:.9rem;color:#555}
+</style>
+</head>
+<body><main>
+<header><a class="logo" href="./">Pebble Play</a><nav><a href="privacy-en.html">Privacy Policy</a><a href="terms-en.html">Terms of Service</a><a href="account-delete-ko.html" hreflang="ko" lang="ko">한국어</a></nav></header>
+
+<h1>Delete your account and data</h1>
+<p class="meta">Apps: <b>PC Café Tycoon</b> and <b>Enhance Tower</b> (Android) &middot; Developer: <b>Pebble Play</b> &middot; The game does not ask for your name or email, so your account is an anonymous user ID created by Firebase Authentication on your device.</p>
+
+<h2>Option 1. In the app (fastest)</h2>
+<p>Open the game &rsaquo; Settings &rsaquo; <b>Delete my data</b> &rsaquo; confirm. Deletion is scheduled for <b>15 days</b> later. During these 15 days your rankings and guild/alliance membership are hidden, and you can cancel by opening the game on the same device and choosing &ldquo;Cancel deletion&rdquo;.</p>
+
+<h2>Option 2. On this page (without the app)</h2>
+<p>If you have uninstalled the game or changed phones, you can still request deletion here with the <b>deletion code</b> that the game shows in Settings &rsaquo; Delete my data &rsaquo; <b>Show deletion code</b> (format <code>PP-XXXX-XXXX-XXXX</code>). The code is specific to one game and one account. Getting a new code makes the old one invalid. The code is valid for 24 hours and works once.</p>
+<form id="f" autocomplete="off">
+<label for="game">Game</label>
+<select id="game"><option value="pcbang">PC Café Tycoon</option><option value="tower">Enhance Tower</option></select>
+<label for="code">Deletion code</label>
+<input id="code" inputmode="latin" maxlength="24" placeholder="PP-XXXX-XXXX-XXXX" required>
+<div><button type="submit" id="go">Request deletion</button></div>
+</form>
+<div id="msg" role="status" aria-live="polite"></div>
+
+<h2>Option 3. By email (no code)</h2>
+<p>If you do not have a code, email <a href="mailto:pebbleplay.games@gmail.com">pebbleplay.games@gmail.com</a> with the subject &ldquo;Delete my account&rdquo;, the <b>game name</b>, your <b>nickname</b>, and (if you can) the user ID shown in the game&rsquo;s settings. We may ask for details only you would know so that we do not delete someone else&rsquo;s account. We reply within 30 days.</p>
+
+<h2>What happens</h2>
+<table>
+<tr><th>Deleted</th><td>Nickname, scores and rankings, arena/duel team records, in-game mail, guild or alliance data, shop data, your anonymous user ID (the Firebase Authentication account, together with any linked Google account identifier), and your deletion code. Deletion happens 15 days after the request (see Option 1 for the cancel window). If you play both games with the same account, the sign-in account itself is removed when the last game&rsquo;s data is deleted.</td></tr>
+<tr><th>Kept</th><td>Purchase and payment records (hashed purchase token, product, status), for as long as refund, fraud-prevention and legal retention duties require (for example, up to 5 years under Korean e-commerce law). They are not linked to a name or email. Short-lived rate-limit counters and standard Google Cloud server logs, which follow Google&rsquo;s retention settings.</td></tr>
+<tr><th>Not affected</th><td>Data held by Google (Google Play purchase history, AdMob advertising data). Manage it in your Google account.</td></tr>
+</table>
+
+<p>See also our <a href="privacy-en.html">Privacy Policy</a>, section 8.</p>
+<footer>&copy; 2026 Pebble Play &middot; Contact <a href="mailto:pebbleplay.games@gmail.com">pebbleplay.games@gmail.com</a></footer>
+</main>
+<script>
+(function () {
+  // 서버 함수 주소(배포 뒤 확인): 2세대 HTTPS 함수 webAccountDelete, 서울 리전
+  var ENDPOINT = 'https://asia-northeast3-pebbleplay-games.cloudfunctions.net/webAccountDelete';
+  var T = {
+    ok: function (d) { return 'Your deletion request has been received. Your data will be deleted on ' + d + '. To cancel, open the game on the same device before then and choose “Cancel deletion”.'; },
+    already: function (d) { return 'A deletion request was already received for this account. Deletion is scheduled for ' + d + '.'; },
+    code: 'This code was not recognized. Check the code, or get a new one in the game (old codes stop working when a new one is created), or use Option 3.',
+    game: 'Choose a game.', rate: 'Too many attempts. Please try again in a few minutes.', paused: 'The service is temporarily paused. Please try again later or use Option 3.',
+    expired: 'This code has expired (codes are valid for 24 hours). Get a new code in the game, or use Option 3.',
+    deleting: 'Deletion is already in progress for this account.', busy: 'Please try again in a moment.', error: 'Something went wrong. Please try again later or use Option 3.', net: 'Could not reach the server. Check your connection and try again.'
+  };
+  var f = document.getElementById('f'), m = document.getElementById('msg');
+  var q = new URLSearchParams(location.search).get('game'); if (q) { var s = document.getElementById('game'); for (var i = 0; i < s.options.length; i++) if (s.options[i].value === q) s.value = q; }
+  function show(cls, text) { m.className = cls; m.textContent = text; }
+  f.addEventListener('submit', function (e) {
+    e.preventDefault(); var b = document.getElementById('go'); b.disabled = true; show('', '');
+    fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ game: document.getElementById('game').value, code: document.getElementById('code').value }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function (j) {
+        if (j && j.ok) { var d = new Date(j.at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }); show('ok', (j.already ? T.already : T.ok)(d)); }
+        else show('err', T[j && j.reason] && typeof T[j.reason] === 'string' ? T[j.reason] : T.error);
+      })
+      .catch(function () { show('err', T.net); })
+      .then(function () { b.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>
